@@ -64,3 +64,32 @@ for class_folder in class_folders:
         cv2.imwrite(output_file, padded_img)
 
 print("Processing complete.")
+
+import os
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+# Path to the directory containing your dataset
+dataset_dir = 'path/to/your/dataset'
+
+# List all image files in the dataset directory
+image_files = [os.path.join(dataset_dir, file) for file in os.listdir(dataset_dir) if file.endswith('.jpg')]
+
+# Create labels based on folder names or any other criteria
+# Assuming folder names represent class labels
+labels = [os.path.basename(os.path.dirname(file)) for file in image_files]
+
+# Shuffle the dataset
+np.random.seed(42)  # for reproducibility
+shuffled_indices = np.random.permutation(len(image_files))
+shuffled_files = [image_files[i] for i in shuffled_indices]
+shuffled_labels = [labels[i] for i in shuffled_indices]
+
+# Split the dataset into training and validation sets
+train_files, val_files, train_labels, val_labels = train_test_split(
+    shuffled_files, shuffled_labels, test_size=0.2, random_state=42)
+
+# Print the number of samples in each set
+print("Number of training samples:", len(train_files))
+print("Number of validation samples:", len(val_files))
+
